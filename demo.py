@@ -164,16 +164,16 @@ for i in g:
     print(i)
 
 
+#用函数打印斐波那契数列
+def fib1(max):
+    n,a,b = 0,0,1
+    while n < max:
+        print(b)
+        a,b = b,a+b
+        n += 1
+    return 'done'  
 
-
-
-
-
-
-
-
-
-
+print(fib1(10))
 
 
 
