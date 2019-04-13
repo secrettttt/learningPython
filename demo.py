@@ -171,9 +171,147 @@ def fib1(max):
         print(b)
         a,b = b,a+b
         n += 1
-    return 'done'  
+    return 'done1'  
 
 print(fib1(10))
+
+#把fib函数改成generator
+'''
+一个函数定义中包含yield关键字，
+那么这个函数不再是一个普通函数，
+而是一个generator
+'''
+def fib2(max):
+    n,a,b=0,0,1
+    while n<max:
+        yield b
+        a,b=b,a+b
+        n+=1
+    return 'done2'
+
+n=fib2(10)
+while True:
+    try:
+        x=next(n)
+        print('n:',x)
+    except StopIteration as e:
+        print('Generator return value:',e.value)
+        break
+
+def odd():
+    print('step 1')
+    yield 1
+    print('step 2')
+    yield 3
+    print('step 3')
+    yield 5
+    
+o=odd()
+for i in o:
+    print(i)
+
+#python迭代器
+#可迭代对象Iterable:可以直接作用于for循环的对象
+#使用isinstance()判断一个对象是否为Iterable对象
+from collections import Iterable
+print(isinstance([],Iterable))
+print(isinstance((),Iterable))
+print(isinstance({},Iterable))
+print(isinstance(([]),Iterable))
+print(isinstance('abc',Iterable))
+print(isinstance(100,Iterable))
+print(isinstance(odd(),Iterable))
+
+#迭代器Iterator:可以被next()函数调用并不断返回下一个值的对象
+#可以使用isinstance()判断一个对象是否是Iterator对象
+from collections import Iterator
+print(isinstance([],Iterator))
+print(isinstance({},Iterator))
+print(isinstance('abc',Iterator))
+
+#对比一下
+print('List and generator:')
+print(isinstance([x*x for x in range(10)],Iterator))
+print(isinstance((x*x for x in range(10)),Iterator))
+
+print(isinstance(odd(),Iterator))
+
+#把list,dict,str等Iterable变成Iterator可以使用iter()函数
+print('iter()强制转换:')
+print(isinstance(iter([x*x for x in range(10)]),Iterator))
+print(isinstance(iter('abc'),Iterator))
+
+'''
+本部分小结：凡是可作用于for循环的对象都是Iterable类型
+凡是可作用于next()函数的对象都是Iterator类型，它表示一个惰性计算的序列
+集合数据类型如list,dict,str等是Iterable但不是Iterator
+可以通过iter()函数获得一个Iterator对象
+'''
+
+#Python的for循环本质上就是通过不断调用next()函数实现的，例如：
+for i in [1,2,3,4,5]:
+    print(i)
+#等价于
+it=iter([1,2,3,4,5])
+while True:
+    try:
+        x=next(it)
+        print(x)
+    except StopIteration:
+        break
+    
+#tuple是不是Iterator:
+print('tuple是不是Iterator？')
+print(isinstance((1,2,3,4,5),Iterator))
+print('显然不是')
+
+#Python生成器和迭代器这篇就够了
+#列表 [0，1，2，3，4，5，6，7，8，9]，要求你把列表里面的每个值加1
+L=[x for x in range(10)]
+for i in L:
+    L[i]+=1
+print(L)
+
+#方法二：列表生成式
+Lis = [x+1 for x in range(10)]
+print(Lis)
+
+'''
+为什么用到生成器？
+通过列表生成式，我们可以直接创建一个列表，
+但是，受到内存限制，列表容量肯定是有限的，
+而且创建一个包含100万个元素的列表，不仅占用很大的存储空间，
+如果我们仅仅需要访问前面几个元素，
+那后面绝大多数元素占用的空间都白白浪费了。
+所以，如果列表元素可以按照某种算法推算出来，
+那我们是否可以在循环的过程中不断推算出后续的元素呢？
+这样就不必创建完整的list，从而节省大量的空间，
+在Python中，这种一边循环一边计算的机制，称为生成器：generator
+
+python中生成器是迭代器的一种，使用yield返回值函数，
+每次调用yield会暂停，
+而可以使用next()函数和send()函数恢复生成器。
+
+生成器类似于返回值为数组的一个函数，
+这个函数可以接受参数，可以被调用，
+但是，不同于一般的函数会一次性返回包括了所有数值的数组，
+生成器一次只能产生一个值，这样消耗的内存数量将大大减小，
+而且允许调用函数可以很快的处理前几个返回值，
+因此生成器看起来像是一个函数，但是表现得却像是迭代器
+'''
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
