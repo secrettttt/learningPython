@@ -1,4 +1,3 @@
 # learningPython
 好好学习一下
-学习Python和git
-
+学习Python
