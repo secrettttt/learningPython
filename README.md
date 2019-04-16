@@ -1,2 +1,2 @@
 # learningPython
-好好学习一下
+闲，好好学习一下
