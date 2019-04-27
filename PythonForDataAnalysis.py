@@ -57,6 +57,157 @@ print("l3 is None:",l3 is None)
 print("10/3=",10/3)
 print("10//3=",10//3)
 
+#count方法计算字符串c的回车符:c.count('\n')
+c = '''
+abc
+def
+'''
+print(c.count('\n'))
+
+#Python的字符串是不可修改的
+a = 'this is a string'
+b = a.replace('string','longer string')
+print(a)
+print(b)
+
+s = 'Python'
+print(list(s))
+
+#切片:
+#例如：L[0:3]表示，从索引0开始取，直到索引3为止，但不包括索引3。即索引0，1，2，正好是3个元素。
+print(s[:1])
+print(s[:2])
+print(s[:3])
+print(s[2:7])
+
+#原生字符
+print("abc\\\\\def\\\ghij\\k")
+print(r"abc\\\\\def\\\ghij\\k")
+
+#字符串格式化
+template = '{0:.2f} {1:s} are worth US${2:d}'
+print(template.format(0.28333,'hello',125))
+
+#python的格式化输出
+print("%d"%2)
+print("%d %.2f"%(2,3.1415926))
+print("%d %.2f %s"%(2,3.1415926,'hello,world'))
+
+#元组拆包
+tup = (4,5,6)
+a,b,c = tup
+print(a)
+print(b)
+print(c)
+
+#即使是嵌套元组也可以拆包
+tup = (4,5,(6,7))
+a,b,(c,d) = tup
+print(d)
+
+#使用这个功能可以轻易的交换变量名
+#在其他语言中，代码可能如下
+a = 5
+b = 3
+print(a,b)
+temp = a
+a = b
+b = temp
+print(a,b)
+
+#在Python中交换可以如下完成
+a = 5
+b = 3
+print(a,b)
+a,b = b,a
+print(a,b)
+
+#拆包的一个常用场景就是遍历元组或列表组成的序列
+seq = [(1,2,3),(4,5,6),(7,8,9)]
+for a,b,c in seq:
+    print(a,b,c)
+    
+for a,b,c in seq:
+    print('a={0},b={1},c={2}'.format(a,b,c))
+
+
+#元组方法：一个常用的方法是count(列表中也可用)，用于计量某个数值在元组中出现的次数
+tup = (1,2,3,4,5,6,7,8,9,10,2,2,2,3,4,5,6,7,8,9,10,2)
+print(tup.count(2))
+
+l = [1,2,3,4,5,6,7,8,9,10,1,1,1,2,2,3,3,4,4,5,5,6,6]
+print(l.count(1))
+
+s = '''
+abcdef
+ghijk
+lmn
+
+'''
+print(s.count('\n'))
+
+gen = range(10)
+print(gen)
+print(list(gen))
+
+#连接和联合列表
+l1 = [1,2,None]
+l2 = ['a',3,(4,5)]
+
+#连接：代价高，连接过程需要创建新列表并且还要复制对象
+print(l1+l2)
+#联合：使用extend将元素添加到已经存在的列表是更好的方式
+l3 = l1.extend(l2)
+print(l1)
+print(l3)#理解extend和连接的区别
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
