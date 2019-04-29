@@ -468,6 +468,83 @@ finally:#无论哪种情况，总会执行
     f.close()
     
 
+#Python处理文件的基础知识
+path = 'file1.txt' #可以用相对路径或绝对路径，这里使用相对路径
+f = open(path)#默认情况下，文件以只读模式‘r’打开
+print(f.tell())#tell方法给出句柄当前位置
+
+#我们可以像处理列表一下处理文件f,并遍历f中的行内容
+temp = []
+for line in f:
+    temp.append(line)
+
+print(f.tell())#tell方法给出句柄当前位置
+print(temp)
+
+f.seek(5)#将句柄的位置改变到文件特定的字节
+print(f.tell())
+
+#将文件中的内容形成不带EOL（行结尾标识）的列表
+#Python rstrip():删除 string 字符串末尾的指定字符（默认为空格）.
+lines = [x.rstrip() for x in open(path)]
+print(lines)
+
+#当使用open创建文件对象时，在结束操作时显式地关闭文件是非常重要的
+#关闭文件会将资源释放回操作系统
+f.close()
+
+#另一种更简单的关闭文件的方法就是使用with语句
+with open(path) as f:
+    lines = [x.rstrip() for x in f]
+print(lines)
+#使用with语句文件会在with代码块结束后自动关闭
+
+#将file1.txt的内容写入文件，并且将空行处理掉
+with open('file2.txt','w') as handle:
+    handle.writelines(x for x in open(path) if len(x)>1)
+with open('file2.txt') as f:
+    lines = f.readlines()
+print(lines)
+
+#NumPy ndarray：多维数组对象
+#导入NumPy
+import numpy as np
+
+#生成随机数组
+data = np.random.randn(2,3)
+print(data)
+print(data*10)
+print(data+data)
+
+#注意：一个ndarray是一个通用的多维同类数据容器，它包含的每一个元素均为相同类型。
+#数组的shape属性和dtype属性
+print(data.shape)
+print(data.dtype)
+
+#通常，”数组“，”NumPy数组“或”ndarray“都表示同一个对象：ndarray对象
+
+#生成ndarray
+data = [[1,2,3,4],[5,6,7,8]]
+arr = np.array(data)
+print(arr)
+print(arr.ndim)
+print(arr.shape)
+print(arr.dtype)
+
+#生成一个N*N特征矩阵（对角线位置都是1，其余位置都是0）
+arr = np.identity(3)
+print(arr)
+
+
+
+
+
+
+
+
+
+
+
 
 
 
