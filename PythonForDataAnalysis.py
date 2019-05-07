@@ -532,20 +532,185 @@ print(arr.shape)
 print(arr.dtype)
 
 #生成一个N*N特征矩阵（对角线位置都是1，其余位置都是0）
+#np.identity()和np.eye()的区别在于:np.identity()只能创建方阵
 arr = np.identity(3)
+print(arr)
+arr2 = np.eye(3,4)
+print(arr2)
+
+#使用astype方法显式地转换数组的数据类型
+arr3 = np.array([1,2,3,4,5])
+print(arr3.dtype)
+float_arr3 = arr3.astype(np.float64)
+print(float_arr3)
+print(float_arr3.dtype)
+
+#把浮点数转换成整数，小数点后的部分将会被消除
+arr4 = np.array([0.123,1.345,2.567,3.789,4.910])
+print(arr4.dtype)
+int_arr4 = arr4.astype(np.int64)
+print(int_arr4)
+print(int_arr4.dtype)
+
+#对于表达数字含义的字符串，也可以用astype将字符串转换成数字
+numeric_strings = np.array(['1.234','5.678','9'])
+print(numeric_strings.dtype)
+numbers = numeric_strings.astype(np.float64)
+print(numbers.dtype)
+print(numbers)
+
+
+#NumPy数组算数
+arr = np.array([[1,2,3],[4,5,6]])
+print(arr)
+print(arr*arr)
+print(arr-arr)
+print(1/arr)
+print(arr**0.5)
+arr2 = np.array([[1,4,5],[2,3,6]])
+#同尺寸数组之间的比较，会产生一个布尔型数组
+print(arr2>arr)
+
+#基础索引与切片
+#一维数组比较简单，和Python的列表很类似
+arr = np.arange(10)
+print(arr)
+print(arr[5])
+print(arr[5:8])
+
+'''
+区别于Python的内建列表，数组的切片是原数组的视图。
+这意味着数据并不是被复制的，任何对于视图的修改都会反映到原数组上.
+'''
+arr[5:8]=12
+print(arr)
+
+arr_slice = arr[5:8]
+print(arr_slice)
+
+#当我改变arr_slice时，变化也会体现在原数组上
+arr_slice[0]=99
+print(arr)
+
+#不写切片值的[:]将会引用数组的所有值
+arr_slice[:]=99
 print(arr)
 
 
+#如果想要一份数组切片的拷贝而不是一份视图的话，必须显式地复制这个数组
+arr = np.arange(10)
+arr[5:8]=12
+print(arr)
 
+arr_copy = arr[5:8].copy()
+print(arr_copy)
 
+arr_copy[0] = 99
+print(arr)
 
+arr_copy[:] = 99
+print(arr)
 
+#和列表进行对比
+l = list(range(10))
+print(l)
+l_slice = l[5:8]
+print(l_slice)
 
+l_slice[0] = 12
+print(l_slice)
+print(l)
 
+#二维数组，每个索引值对应的元素不再是一个值，而是一个一维数组
+arr2d = np.array([[1,2,3],[4,5,6],[7,8,9]])
+print(arr2d[2])
 
+#获得单个元素
+print(arr2d[0][2])
+#可以通过传递一个索引的逗号分隔列表去选择单个元素
+print(arr2d[0,2])
+#以上两种方式效果一样
 
+#这是一个2*2*3的多维数组
+arr3d = np.array([[[1,2,3],[4,5,6]],[[7,8,9],[10,11,12]]])
+print(arr3d)
 
+#arr3d[0]是一个2*3的二维数组
+print(arr3d[0])
 
+old_value = arr3d[0]
+arr3d[0] = 42
+print(arr3d)
+arr3d[0] = old_value
+print(arr3d)
 
+#类似的arr3d[1,0]返回的是一个一维数组
+print(arr3d[1,0])
 
+#需要注意的是，以上的数组子集选择中，返回的都是视图
+
+#一维数组的切片
+print(arr)
+print(arr[1:6])
+
+#二维数组的切片
+print(arr2d)
+
+#选择arr2d的前两“行”
+print(arr2d[:2])
+
+#选择arr2d的前两行的后两列
+print(arr2d[:2,1:])
+
+'''
+可以将索引和切片混合
+因为索引和切片的本质都是视图（理解这句话）
+例如，我们可以选择第二行但是只选择前两列
+'''
+print(arr2d[1,:2])
+
+#同样，我们可以选择第三列，但是只选择前两行
+print(arr2d[:2,2])
+
+#单独一个冒号表示整个轴上的数组
+print(arr2d[:,:1])
+
+#对切片表达式赋值，整个切片都会重新赋值
+arr2d[:2,1:] = 0
+print(arr2d)
+
+#理解它们的不同
+print(arr2d[1,:2])#shape(2,)，意思是一个一维数组，数组中有2个元素
+print(arr2d[1:2,:2])#shape(1,2)，意思是一个二维数组，有1行，每行2个元素
+
+#理解它们的不同
+print(arr2d[2])#shape(3,)，意思是一个一维数组，数组中有3个元素
+print(arr2d[2,:])#shape(3,)，意思是一个一维数组，数组中有3个元素
+print(arr2d[2:,:])#shape(1,3)，意思是一个二维数组，有1行，每行3个元素
+
+#布尔索引
+names = np.array(['Bob','Joe','Will','Bob','Will','Joe','Joe'])
+print(names)
+
+#numpy.random的randn函数可以生成一些随机正态分布数据
+data = np.random.randn(7,4)
+print(data)
+
+#假设每个人名和data数组中的一行相对应，并且我们想选中所有‘Bob’对应的行
+
+#产生一个布尔值数组
+print(names == 'Bob')
+
+print('data[names == \'Bob\']:\n',data[names == 'Bob'])
+
+print('data[names == \'Bob\',2:]:\n',data[names == 'Bob',2:])
+
+print('data[names == \'Bob\',3]:\n',data[names == 'Bob',3])
+
+print(names != 'Bob')
+print(~(names == 'Bob'))
+
+print(data[~(names == 'Bob')])
+
+#~符号可以在你想要对一个通用条件进行取反时使用
 
