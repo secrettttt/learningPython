@@ -713,4 +713,129 @@ print(~(names == 'Bob'))
 print(data[~(names == 'Bob')])
 
 #~符号可以在你想要对一个通用条件进行取反时使用
+cond = names == 'Bob'
+print(data[~cond])
+
+#使用 & 和 |
+mask = (names == 'Bob')|(names == 'Joe')
+print(mask)
+print(data[mask])
+
+#使用布尔值索引选择数据时，总是生成数据的拷贝，即使返回的数组并没有任何的变化
+
+#Python的关键字 and 和 or 对布尔值数组并没有用，请使用 & 和 | 代替。
+
+#把data中的所有负值设置为0
+print(data)
+data [data < 0] = 0
+print(data)
+
+#利用一维布尔值数组对每一行设置数值也是非常简单的
+data [names == 'Bob'] = 7
+print(data)
+
+#神奇索引
+arr = np.empty((8,4))
+print(arr)
+
+for i in range(8):
+    arr[i] = i
+
+print(arr)
+
+#为了选出一个符合特定顺序的子集，可以通过传递一个包含指明所需顺序的列表或数组来完成
+arr2 = arr[[4,3,0,6]]
+
+print(arr)
+print(arr2)
+
+#如果是负的索引，将从尾部进行选择
+arr3 = arr[[-3,-5,-7]]
+print(arr3)
+
+#传递多个索引数组的情况
+arr = np.arange(32)
+print(arr)
+arr = arr.reshape(8,4)
+print(arr)
+
+arr2 = arr[[1,5,7,2],[0,3,1,2]]
+print(arr2)
+#这个例子中的（1,0),(5,3),(7,1)和(2,2)被选中
+
+#常用（理解）
+print('arr:\n',arr)
+arr2 = arr[[1,5,7,2]][:,[0,3,1,2]]
+print(arr2)
+
+#请牢记，神奇索引与切片不同，它总是将数据复制到一个新的数组中
+
+#转置
+arr = np.arange(15).reshape((3,5))
+print(arr)
+print(arr.T)
+
+#计算矩阵内积
+arr = np.random.randn(6,3)
+print(arr)
+print(np.dot(arr.T,arr))
+
+'''
+对NumPy中dot()函数的理解
+如果处理的是一维数组，则得到两数组的内积
+如果处理的是二维数组，则得到矩阵积
+dot()函数可以通过NumPy库调用，也可以通过数组实例对象进行调用
+a.dot(b)与np.dot(a,b)效果相同
+矩阵积计算不遵循交换律，np.dot(a,b)和np.dot(b,a)得到的结果是不一样的
+'''
+
+#对于更高维的数组，transpose方法可以接收包含轴编号的元组，用于置换轴
+
+arr = np.arange(16).reshape(2,2,4)
+print(arr)
+
+#置换轴:第一个轴和第二个轴对换，最后一个轴不变
+arr2 = arr.transpose((1,0,2))
+print(arr2)
+
+arr3 = arr.transpose((0,2,1))
+print(arr3)
+
+#ndarray有一个swapaxes方法，该方法接收一对轴编号作为参数，并对轴进行调整用于重组数据
+print(arr)
+print(arr.swapaxes(1,2))#参数是轴编号
+print(arr.swapaxes(2,1))#参数是轴编号
+
+#swapaxes返回的是数据的视图，而没有对数据进行复制
+
+#通用函数：也称为ufunc，是一种在ndarray数据中进行逐元素操作的函数
+arr = np.arange(10)
+print(arr)
+
+#一元通用函数示例
+print(np.sqrt(arr))
+print(np.exp(arr))
+
+#二元通用函数示例
+x = np.random.randn(8)
+y = np.random.randn(8)
+print(x)
+print(y)
+print(np.maximum(x,y))
+#这里，numpy.maximum逐个元素地将x和y中的元素的最大值计算出来
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
