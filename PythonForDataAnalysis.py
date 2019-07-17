@@ -824,6 +824,105 @@ print(y)
 print(np.maximum(x,y))
 #这里，numpy.maximum逐个元素地将x和y中的元素的最大值计算出来
 
+#使用数组进行面向数组编程
+points = np.arange(-5,5,0.01)
+print(points)
+
+#生成网格点坐标矩阵
+xs,ys = np.meshgrid(points,points)
+print(ys)
+print(xs)
+
+z = np.sqrt(xs**2 + ys**2)
+print(z)
+
+import matplotlib.pyplot as plt
+plt.imshow(z,cmap=plt.cm.gray)
+plt.colorbar()
+plt.title("Image plot of $\sqrt{x^2+y^2}$ for a grid of values")
+
+#生成一个随机数组，将数组中所有正值设置为2，所有负值设置为-2
+arr = np.random.randn(5,3)
+print(arr)
+arr = np.where(arr>0,2,-2)
+print(arr)
+print(arr.sum())
+print(arr.mean())
+
+#生成一个随机数组，并求出正值的个数
+arr = np.random.randn(5,3)
+print(arr)
+print((arr>0).sum())
+
+#布尔值数组的any和all方法：
+arr = np.array([False,False,True,True,False])
+print(arr.all())
+print(arr.any())
+
+#排序
+#和Python的内建列表类型相似，Numpy数组可以使用sort方法按位置排序：
+arr = np.random.randn(6)
+print(arr)
+arr.sort()
+print(arr)
+
+#顶层的np.sort方法返回的是已经排好序的数组拷贝，而不是对原数组按位置排序。
+arr = np.random.randn(6)
+print(arr)
+arr2 = np.sort(arr)
+print(arr2)
+
+
+#pandas入门
+import pandas as pd
+from pandas import Series, DataFrame
+
+Chinese = pd.Series([90,85,87,80,78])
+
+data = {'Name':['anan','lala','caca','dada','eaea'],
+        'Chinese':Chinese,
+        'Maths':[89,93,91,86,75],
+        'English':[93,97,98,92,90],
+        }
+
+frame = pd.DataFrame(data)
+
+print(frame)
+
+#reindex是pandas对象的重要方法，该方法用于创建一个符合新索引的新对象
+frame2 = frame.reindex([1,2,3,4,'5','6'])
+
+print(frame)
+
+print(frame2)
+
+print(frame2.head())
+
+#理解这个操作：这里的column、index仅相当于“视图”
+frame3 = pd.DataFrame(data,columns = ['CN','MA','EN'],
+                      index = ['a','b','c','d','e'])
+print(frame3)
+
+'''
+5.2.2的drop方法有一个可选参数inplace，默认为False，表明原数组内容并不改变，
+如果我们需要得到改变后的内容，需要将新结果赋给一个新的数组。
+如果将inplace值设定为True，则原数组内容直接被改变。
+'''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
