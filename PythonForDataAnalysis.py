@@ -909,6 +909,109 @@ print(frame3)
 如果将inplace值设定为True，则原数组内容直接被改变。
 '''
 
+print(frame)
+frame_no_Chinese = frame.drop('Chinese',axis = 'columns')
+print(frame)
+print(frame_no_Chinese)
+
+frame.drop('Chinese',axis = 'columns',inplace = True)
+print(frame)
+
+
+#索引、选择与过滤
+'''
+Series的索引与Numpy数组索引的功能类似，只不过Series的索引值可以不仅仅是整数。
+'''
+
+#普通的Python切片是不包含尾部的，Series的切片与之不同：
+obj = pd.Series(np.arange(4.),index = ['a','b','c','d'])
+print(obj)
+print(obj['b':'c'])
+
+#使用这些方法设值时会修改Series相应的部分
+obj['b':'c'] = 5
+print(obj)
+
+#使用布尔值DataFrame进行索引
+data = pd.DataFrame(np.arange(16).reshape((4,4)),
+                    index = ['Ohio','Colorado','Utah','New York'],
+                    columns = ['one','two','three','four'])
+
+#使用单个值或序列，可以从DataFrame中索引出一个或多个列
+print(data['two'])
+print(data[['three','one']])
+print(data[:2])
+print(data[data['three'] > 5])
+
+#使用布尔值DataFrame进行索引
+print(data)
+
+print(data<5)
+
+data[data<5]=0
+print(data)
+
+#使用loc和iloc选择数据
+'''
+pandas团队创建loc和iloc运算符分别用于严格处理基于标签和基于整数的索引：
+轴标签（loc）
+整数标签（iloc）
+'''
+print(data)
+#通过标签选出单行多列的数据
+print(data.loc['Colorado',['two','three']])
+#通过使用整数标签iloc进行类似的数据选择
+print(data.iloc[2,[3,0,1]])
+print(data.iloc[2])
+print(data.iloc[[1,2],[3,0,1]])
+
+#除了单个标签或标签列表之外，索引功能还可以用于切片
+print(data.loc[:'Utah','two'])
+print(data.iloc[:,:3][data.three>5])
+
+#理解本书 5.2.4整数索引 
+ser = pd.Series(np.arange(3.))
+#print(ser[-1])，报错
+'''
+ser的索引包含了0、1、2
+所以这种情况下很难推断用户所需要的索引方式是标签索引还是位置索引。
+'''
+
+#为了保持一致性，如果你有一个包含整数的轴索引，数据选择时请始终使用标签索引。
+ser2 = pd.Series(np.arange(3.),index = ['a','b','c'])
+print(ser2[-1])
+
+#为了更精确地处理，可以使用loc(用于标签)或iloc(用于整数)
+print(ser[:1])
+print(ser.loc[:1])
+print(ser.iloc[:1])
+
+#5.25 算术和数据对齐
+'''
+不同索引的对象之间的算术行为是pandas提供给一些应用的一项重要特性。当你将对象相加时，
+如果存在某个索引对不相同，则返回结果的索引将是索引对的并集。
+对数据库用户来说，这个特性类似于索引标签的自动外连接（outer join）
+
+没有交叠的标签位置上，内部数据对齐会产生缺失值，缺失值会在后续的算术操作上产生影响。
+在DataFrame的示例中，行和列上都会执行对齐。
+
+如果将两个行或列完全不同的DataFrame对象相加，结果全部为空
+'''
+df1 = pd.DataFrame({'A':[1,2]})
+df2 = pd.DataFrame({'B':[3,4]})
+print(df1)
+print(df2)
+print(df1 - df2)
+
+
+
+
+
+
+
+
+
+
 
 
 
