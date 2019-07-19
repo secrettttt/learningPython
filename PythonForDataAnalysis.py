@@ -1003,6 +1003,203 @@ print(df1)
 print(df2)
 print(df1 - df2)
 
+#使用填充值的算术方法
+df1 = pd.DataFrame(np.arange(12.0).reshape((3,4)),columns = list('abcd'))
+df2 = pd.DataFrame(np.arange(20.0).reshape(4,5),columns = list('abcde'))
+
+print(df1)
+print(df2)
+
+df2.loc[1,'b'] = np.nan
+print(df2)
+
+#这种情况下，一些不重叠的位置出现NA值
+print(df1 + df2)
+
+#在df1上使用add方法，将df2和一个fill_value作为参数传入
+print(df1.add(df2,fill_value = 0))
+
+#注意： 表5-5的这些方法中，每一个都有一个以r开头的副本，这些副本方法的参数是翻转的。
+'''
+理解：因此 1/df1 和 df1.rdiv(1) 这两个语句的结果是等价的
+'''
+print(1/df1)
+print(df1.rdiv(1))
+
+#与此相关的一点，当对Series或DataFrame重建索引时，可以指定一个不同的填充值
+#注意:reindex是pandas对象的重要方法，该方法用于创建一个符合新索引的新对象
+df3 = df1.reindex(columns = df2.columns , fill_value = 0)
+print(df1)
+print(df3)
+
+'''
+对比: DataFrame和Series间的操作 和 二维数组与一维数组间的操作 
+'''
+
+'''
+二维数组与一维数组间的操作：
+当我们从arr中减去arr[0]时，减法在每一行都进行了操作，这就是所谓的广播机制。
+'''
+arr = np.arange(12.).reshape((3,4))
+print(arr)
+print(arr[0])
+print(arr - arr[0])
+
+'''
+DataFrame和Series间的操作也类似
+默认情况下，DataFrame和Series的数学操作会将Series的索引和DataFrame的列进行匹配，并广播到各行。
+（理解：默认情况下，Series匹配到DataFrame的某一行，在行上进行广播）
+'''
+frame = pd.DataFrame(np.arange(12.).reshape((4,3)),
+                     columns = list('bde'),index =['Utah','Ohio','Texas','Oregon'])
+series = frame.iloc[0]
+
+print(frame)
+print(series)
+print(frame - series)
+
+'''
+想改为在列上进行广播，在行上匹配，需要使用算术方法的某一种。
+所传递的axis值用于匹配轴。
+下面的示例中表示我们需要在DataFrame的行索引上对行匹配(axis = 'index' 或 axis = 0)，并在列上进行广播
+细节：对行匹配 == Series匹配到DataFrame的某一列 
+'''
+series3 = frame['d']
+print(series3)
+
+frame2 = frame.sub(series3, axis = 'index')
+print(frame)
+print(frame2)
+
+'''
+如果一个索引值不在DataFrame的列中，也不在Series的索引中，则对象会重建索引并形成联合。
+'''
+series2 = pd.Series(range(3),index = ['b','e','f'])
+print(frame + series2)
+
+#函数应用与映射
+#Numpy的通用函数（逐元素数组方法）对pandas对象也有效
+frame = pd.DataFrame(np.random.randn(4,3),columns=list('bde'),
+                     index = ['Utah','Ohio','Texas','Oregon'])
+print(frame)
+print(np.abs(frame))
+
+#另一个常用的操作是将函数应用到一行或一列的一维数组上，DataFrame的apply方法可以实现这个功能
+
+#匿名函数
+f = lambda x : x.max() - x.min()
+series = frame.apply(f)
+print(series)#结果是一个以frame的列作为索引的Series
+
+#如果传递 axis = 'columns' 给apply函数，函数将会被每行调用一次
+series2 = frame.apply(f,axis = 'columns')
+print(series2)
+
+'''
+理解：传递给apply的函数并不一定返回一个标量值，也可以返回带有多个值的Series
+'''
+def f(x):
+    return pd.Series([x.min(),x.max()],index = ['min','max'])
+series = frame.apply(f)
+print(series)
+
+series2 = frame.apply(f,axis = 'columns')
+print(series2)
+
+'''
+逐元素的Python函数也可以使用。假设你想要根据frame中的每个浮点数计算一个格式化字符串，
+可以使用applymap方法
+
+map、apply和applymap 的区别：
+map是将函数套用到Series上的每个元素
+apply是将函数套用到DataFrame的行与列
+applymap是将函数套用到DataFrame的每个元素
+
+'''
+format = lambda x : '%.2f' % x
+frame2 = frame.applymap(format)
+print(frame2)
+
+'''
+使用applymap作为函数名是因为Series有map方法，可以将一个逐元素的函数应用到Series上
+'''
+series = frame['e'].map(format)
+print(series)
+
+#排序与排名 之 排序
+#sort_index方法，该方法返回一个新的、排序好的对象
+'''
+range和arange:
+有三个参数，依次为start，end(不包含)，step。在不指明start或者step的情况下，默认起始点为0，步长为1。 
+>>> range(2,8,2)
+[2, 4, 6]
+>>> np.arange(2,8,2)
+array([2, 4, 6])
+
+arange返回的是一个ndarray，使用前需要引入numpy，即import numpy as np；而range返回一个list。
+
+arange允许步长为小数，而range不允许 
+'''
+obj = pd.Series(range(4),index = ['d','a','b','c'])
+obj2 = obj.sort_index()
+print(obj2)
+
+#如果是根据Series的值进行排序，使用sort_values方法
+obj = pd.Series([4,7,-3,2])
+obj3 = obj.sort_values()
+print(obj3)
+
+#默认情况下，所有的缺失值都会被排序到Series的尾部
+obj = pd.Series([4,np.nan,7,np.nan,-3,2])
+obj4 = obj.sort_values()
+print(obj4)
+
+#在DataFrame中，可以在各个轴上按索引排序
+frame = pd.DataFrame(np.arange(8).reshape((2,4)),
+                     index = ['three','one'],
+                     columns = ['d','a','b','c'])
+
+frame2 = frame.sort_index()
+print(frame2)
+
+frame3 = frame.sort_index(axis = 1)
+print(frame3)
+
+#数据默认升序排序，也可以按照降序排序
+frame4 = frame.sort_index(axis = 1 , ascending = False)
+print(frame4)
+
+#对DataFrame排序时，可以使用一列或多列作为排序键
+frame = pd.DataFrame({'b':[4,7,-3,2],'a':[0,1,0,1]})
+print(frame)
+frame2 = frame.sort_values(by='b')
+print(frame2)
+frame3 = frame.sort_values(by=['a','b'])
+print(frame3)
+
+#排序与排名 之 排名
+'''
+Series和DataFrame的rank方法是实现排名的方法。
+注意排名中的平级关系打破方法：表5-6
+'''
+
+'''
+允许存在含有重复标签的轴索引
+尽管很多pandas函数（比如reindex）需要标签是唯一的，但这个并不是强制性的。
+索引的is_unique属性可以告诉我们它的标签是否唯一
+带有重复索引的情况下，数据选择与之前的操作有差别：根据一个标签索引多个条目会返回一个序列，
+而单个条目会返回标量值。
+相同的逻辑可以拓展到在DataFrame中进行行索引
+'''
+#描述性统计的概述与计算
+
+
+
+#数据载入、存储及文件格式
+
+
+
+
 
 
 
