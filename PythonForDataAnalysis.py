@@ -1192,12 +1192,91 @@ Series和DataFrame的rank方法是实现排名的方法。
 相同的逻辑可以拓展到在DataFrame中进行行索引
 '''
 #描述性统计的概述与计算
+#相关性和协方差
+#唯一值、计数和成员属性
+obj = pd.Series(['c','a','d','a','a','b','b','c','c'])
+uniques = obj.unique()
+print(uniques)
 
+'''
+Python sort和sorted :
+list内置sort()方法用来排序，也可以用python内置的全局sorted()方法来对可迭代的序列排序生成新的序列。
+sort()不能对dict字典进行排序。
+使用sorted()对dict排序默认会按照dict的key值进行排序，最后返回的结果是一个对key值排序好的list。
 
+示例：
+
+my_dict = {"a":"2", "c":"5", "b":"1"}
+
+result = sorted(my_dict)
+print result
+#默认对dict排序，不指定key参数,会默认对dict的key值进行比较排序
+#result输出: ['a', 'b', 'c']
+
+result2 = sorted(my_dict, key=lambda x:my_dict[x])
+print result2
+#指定key参数，根据dict的value排序
+#result2输出:['b', 'a', 'c']
+
+'''
+uniques.sort()
+print(uniques)
+
+#value_counts计算出Series包含的值的个数
+#为了方便，返回的Series会按照数量降序排序
+series_counts = obj.value_counts()
+print(series_counts)
+
+print('value_counts也是有效的pandas顶层方法，可用于任意数组或序列')
+series_counts2 = pd.value_counts(obj,sort=False)
+print(series_counts2)
+
+print('isin执行向量化的成员属性检查，还可以将数据集以Series或DataFrame一列的形式过滤为数据集的值子集')
+print(obj)
+
+mask = obj.isin(['b','c'])
+print(mask)
+print(obj[mask])#??????????????????????????????
+
+print('与isin相关的Index.get_indexer方法')
+'''
+Index.get_indexer 方法的含义：
+表示to_match中的字符，在unique_vals中的位置索引。
+博客：https://www.cnblogs.com/rougan/p/10071537.html
+'''
+to_match = pd.Series(['a','c','d','c','b','d','a','c','a'])
+unique_vals = pd.Series(['a','b','c','d'])
+index_list = pd.Index(unique_vals).get_indexer(to_match)
+print(index_list)
+
+#最后一种情形
+data = pd.DataFrame({'Qu1':[0,3,4,3,4],
+                     'Qu2':[2,3,1,2,3],
+                     'Qu3':[1,5,2,9,4,]})
+print(data)
+
+#将pandas.value_counts传入DataFrame的apply函数可以得到：
+result = data.apply(pd.value_counts).fillna(0)
+print(result)
+'''
+尝试写出运行结果：
+   Qu1  Qu2  Qu3
+0  1.0  0.0  0.0
+1  0.0  1.0  1.0
+2  0.0  2.0  1.0
+3  2.0  2.0  0.0
+4  2.0  0.0  1.0
+5  0.0  0.0  1.0
+9  0.0  0.0  1.0
+
+这里，结果中的行标签是所有列中出现的不同的值，数值则是这些不同值在每个列中出现的次数。
+'''
 
 #数据载入、存储及文件格式
 
-
+'''
+文本格式数据的读写
+'''
 
 
 
