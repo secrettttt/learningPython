@@ -1278,26 +1278,96 @@ print(result)
 文本格式数据的读写
 '''
 
+'''
+Unix shell的cat命令用来显示文件的内容
+在Windows下，可以使用type来代替cat达到同样的效果
+'''
 
+'''
+使用read_csv将数据读入一个DataFrame
+'''
+df = pd.read_csv('examples/ex1.csv')
+print(df)
 
+'''
+有的文件并不包含表头行
+要读取该文件，需要选择一些选项：
+可以允许pandas自动分配默认列名，也可以自己指定列名
+'''
+df2 = pd.read_csv('examples/ex2.csv',header = None)
+print(df2)
 
+df3 = pd.read_csv('examples/ex2.csv',names = ['a','b','c','d','message'])
+print(df3)
 
+#此处是不准确示范
+df4 = pd.read_csv('examples/ex2.csv')
+print(df4)
 
+'''
+若要把message列成为所返回的DataFrame的索引，可以指定该列为索引
+'''
+names = ['a','b','c','d','message']
+df5 = pd.read_csv('examples/ex2.csv',names=names,index_col='message')
+print(df5)
 
+'''
+若要从多个列中形成一个分层索引，需要传入一个包含列序号或列名的列表
+'''
+parsed = pd.read_csv('examples/csv_mindex.csv',index_col=['key1','key2'])
+print(parsed)
 
+'''
+一张表的分隔符并不是固定的，有的则是使用空白或其他方式来分隔字段。
+'''
+l = list(open('examples/ex3.txt'))
+print(l)
 
+'''
+当字段是以多种不同数量的空格分开时，尽管你可以手工处理，
+但在这些情况西安也可以向read_table传入一个正则表达式作为分隔符。
+在本例中，正则表达式为\s+
+'''
+result = pd.read_table('examples/ex3.txt',sep='\s+')
+print(result)
+'''
+本例中，由于列名的数量比数据的列数少一个，因此read_table推断第一列应当为DataFrame的索引
+'''
 
+#解析函数有很多附加参数帮助你处理各种发生的异常的文件格式
+#本书表6-2：一些read_csv/read_table函数的参数 列举了一部分
 
+#使用skiprows:从文件开头处起，需要跳过的行数或行号列表
+df6 = pd.read_csv('examples/ex4.csv',skiprows = [0,2,3])
+print(df6)
 
+#缺失值处理
+result = pd.read_csv('examples/ex5.csv')
+print(result)
+result_isnull = pd.isnull(result)
+print(result_isnull)
 
+#na_values选项可以传入一个列表或一组字符串来处理缺失值
+result2 = pd.read_csv('examples/ex5.csv',na_values=['NULL'])
+print(result2)
 
+'''
+理解函数na_values的含义，别搞混了
+na_values:需要用NA替换的值的序列
+'''
+result3 = pd.read_csv('examples/ex5.csv',na_values = ['11.0'])
+print(result3)
 
+#在字典中，每列可以指定不同缺失值标识
+sentinels = {'message':['foo','NA'],'something':['two']}
+result4 = pd.read_csv('examples/ex5.csv',na_values = sentinels)
+print(result4)
 
+#表6.2列举了pandas.read_csv和pandas.read_table中常用的选项
 
-
-
-
-
+'''
+分块读入文本文件
+'''
 
 
 
