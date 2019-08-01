@@ -1369,6 +1369,112 @@ print(result4)
 分块读入文本文件
 '''
 
+#对pandas的显示设置进行调整
+pd.options.display.max_rows = 10
+
+result = pd.read_csv('examples/taobao_data.csv')
+print(result)
+
+#如果你只想读取一小部分行（避免读取整个文件），可以指明nrows
+result = pd.read_csv('examples/taobao_data.csv',nrows = 5)
+print(result)
+
+'''
+为了分块读入文件，可以指定chunksize作为每一块的行数
+read_csv返回的TextParser对象允许你根据chunksize遍历文件
+TextParser还具有get_chunk方法，允许你按照任意大小读取数据块
+'''
+
+chunker = pd.read_csv('examples/taobao_data.csv',chunksize = 2000)
+
+tot = pd.Series([])
+for piece in chunker:
+    tot = tot.add(piece['成交量'].value_counts(),fill_value = 0)
+tot = tot.sort_values(ascending = False)
+print(tot[:10])
+
+'''
+将数据写入文本格式
+'''
+data = pd.read_csv('examples/ex5.csv')
+print(data)
+
+'''
+使用DataFrame的to_csv方法，我们可以将数据导出为逗号分隔的文件
+'''
+data.to_csv('examples/out.csv')
+
+'''
+当然，其他分隔符也是可以的(写入到sys.stdout时，控制台中打印的文本结果)
+'''
+import sys
+data.to_csv(sys.stdout,sep = '|')
+
+'''
+缺失值在输出时以空字符串出现，也可以用其他标识符对缺失值进行标注
+'''
+data.to_csv(sys.stdout,na_rep='NULL')
+
+'''
+可以禁止写入行和列的标签
+'''
+data.to_csv(sys.stdout,index=False,header=False)
+
+'''
+可以仅写入列的子集，并按照你选择的顺序写入
+'''
+data.to_csv(sys.stdout,index=False,columns=['a','b','c'])
+
+'''
+Series也有to_csv方法
+'''
+dates = pd.date_range('1/1/2000',periods=7)
+
+ts = pd.Series(np.arange(7),index=dates)
+
+ts.to_csv(sys.stdout)
+
+'''
+使用分隔格式
+
+绝大多数的表型数据可以使用函数pandas.read_table从硬盘中读取
+然而，接收一个带有一行或多行错误的文件并不少见，read_table并不能解决这种情况
+
+对于任何带有单字符分隔符的文件，你可以使用Python的内建csv模块。
+要使用它，需要将任一打开的文件或文件型对象传给csv.reader
+'''
+import csv
+f = open('examples/ex7.csv')
+reader = csv.reader(f)
+
+'''
+像遍历文件一样遍历reader会产生元组，元组的值为删除了引号的符号
+'''
+for line in reader:
+    print(line)
+
+'''
+将文件读取为行的列表
+'''
+with open('examples/ex7.csv') as f:
+    lines = list(csv.reader(f))
+print(lines)
+
+'''
+将数据拆分成列名行和数据行
+'''
+header, values = lines[0], lines[1:]
+print(header)
+print(values)
+
+'''
+使用字典推导式和表达式zip(*values)生成一个包含数据列的字典，字典中的行转置为列
+'''
+data_dict = { h: v for h, v in zip(header, zip(*values))}
+print(data_dict)
+
+
+
 
 
 
